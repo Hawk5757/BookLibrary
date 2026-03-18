@@ -1,8 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3795F295-E265-4616-89C4-CBAD6A317357}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D268309D-C0BB-452D-A9CD-F23F4F283C75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLibrary", "BookLibrary\BookLibrary.csproj", "{B2BCA8FF-A2EA-4224-BB9F-E3FE08F08ADA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLibrary.Tests", "BookLibrary.Tests\BookLibrary.Tests.csproj", "{B3F62F59-C4F6-46AF-A52D-241AD9855E5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B2BCA8FF-A2EA-4224-BB9F-E3FE08F08ADA} = {3795F295-E265-4616-89C4-CBAD6A317357}
+		{B3F62F59-C4F6-46AF-A52D-241AD9855E5C} = {D268309D-C0BB-452D-A9CD-F23F4F283C75}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2BCA8FF-A2EA-4224-BB9F-E3FE08F08ADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2BCA8FF-A2EA-4224-BB9F-E3FE08F08ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2BCA8FF-A2EA-4224-BB9F-E3FE08F08ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2BCA8FF-A2EA-4224-BB9F-E3FE08F08ADA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3F62F59-C4F6-46AF-A52D-241AD9855E5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3F62F59-C4F6-46AF-A52D-241AD9855E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3F62F59-C4F6-46AF-A52D-241AD9855E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3F62F59-C4F6-46AF-A52D-241AD9855E5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
