@@ -97,4 +97,12 @@ public sealed class BookLibrary
             .Where(b => b.Title.Contains(searchCondition, StringComparison.OrdinalIgnoreCase))
             .ToList();
     }
+    
+    public void SortByAuthorThenTitle()
+    {
+        _books = _books
+            .OrderBy(b => b.Author, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(b => b.Title, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
 }

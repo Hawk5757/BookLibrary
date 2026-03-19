@@ -219,5 +219,30 @@ public class BookLibraryTests
         // Assert
         Assert.Empty(results);
     }
+    
+    [Fact]
+    public void SortByAuthorThenTitle_UnsortedBooks_SortsCorrectly()
+    {
+        // Arrange
+        var library = new BookLibrary();
+        library.AddBook(new Book("The Ugly Duckling", "Hans Christian Andersen", 100));
+        library.AddBook(new Book("The Stand", "Stephen King", 800));
+        library.AddBook(new Book("The Little Mermaid", "Hans Christian Andersen", 150));
+        library.AddBook(new Book("It", "Stephen King", 1100));
+
+        // Act
+        library.SortByAuthorThenTitle();
+
+        // Assert
+        Assert.Equal(4, library.Books.Count);
+        Assert.Equal("Hans Christian Andersen", library.Books[0].Author);
+        Assert.Equal("The Little Mermaid", library.Books[0].Title);
+        Assert.Equal("Hans Christian Andersen", library.Books[1].Author);
+        Assert.Equal("The Ugly Duckling", library.Books[1].Title);
+        Assert.Equal("Stephen King", library.Books[2].Author);
+        Assert.Equal("It", library.Books[2].Title);
+        Assert.Equal("Stephen King", library.Books[3].Author);
+        Assert.Equal("The Stand", library.Books[3].Title);
+    }
 
 }
