@@ -84,16 +84,7 @@ public sealed class BookLibrary
 
     public void AddBook(Book book)
     {
-        if (book == null)
-            throw new ArgumentNullException(nameof(book));
-        if (string.IsNullOrWhiteSpace(book.Title))
-            throw new ArgumentException("Book title cannot be empty.", nameof(book));
-        if (string.IsNullOrWhiteSpace(book.Author))
-            throw new ArgumentException("Book author cannot be empty.", nameof(book));
-        if (book.Pages <= 0)
-            throw new ArgumentException("Book pages must be greater than 0.", nameof(book));
-
-        _books.Add(book);
+        _books.Add(book ?? throw new ArgumentNullException(nameof(book)));
     }
 
     public void SaveToXml(string filePath)
