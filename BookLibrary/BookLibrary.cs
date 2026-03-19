@@ -1,5 +1,6 @@
-﻿using System.Xml.Linq;
-using BookLibrary.Models;
+﻿using BookLibrary.Models;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace BookLibrary;
 
@@ -16,46 +17,71 @@ public sealed class BookLibrary
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"The XML file was not found at: {filePath}");
 
-        try
+        var loadedBooks = new List<Book>();
+
+        using (var reader = XmlReader.Create(filePath))
         {
-            using var stream = File.OpenRead(filePath);
-
-            var doc = XDocument.Load(stream);
-            var root = doc.Root;
-
-            if (root == null || root.Name != "Books")
-                throw new InvalidOperationException("Invalid XML format. Root element must be 'Books'.");
-
-            var loadedBooks = new List<Book>();
-
-            foreach (XElement bookElement in root.Elements("Book"))
+            try
             {
-                string? title = bookElement.Element("Title")?.Value;
-                string? author = bookElement.Element("Author")?.Value;
-                string? pagesStr = bookElement.Element("Pages")?.Value;
-
-                if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(author))
+                while (reader.Read())
                 {
-                    throw new InvalidDataException("Book title or author cannot be empty in XML.");
+                    if (reader.NodeType == XmlNodeType.Element && reader.Name == "Books")
+                        break;
                 }
 
-                if (!int.TryParse(pagesStr, out int pages) || pages < 0)
-                {
-                    throw new InvalidDataException($"Invalid page count '{pagesStr}' for book '{title}'.");
-                }
+                if (reader.EOF)
+                    throw new InvalidOperationException("Invalid XML format. Root element must be 'Books'.");
 
-                loadedBooks.Add(new Book(title, author, pages));
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element && reader.Name == "Book")
+                    {
+                        string? title = null;
+                        string? author = null;
+                        int pages = -1;
+
+                        using (var bookSubtree = reader.ReadSubtree())
+                        {
+                            bookSubtree.Read();
+                            while (bookSubtree.Read())
+                            {
+                                if (bookSubtree.NodeType == XmlNodeType.Element)
+                                {
+                                    switch (bookSubtree.Name)
+                                    {
+                                        case "Title":
+                                            title = bookSubtree.ReadElementContentAsString();
+                                            break;
+                                        case "Author":
+                                            author = bookSubtree.ReadElementContentAsString();
+                                            break;
+                                        case "Pages":
+                                            var pagesStr = bookSubtree.ReadElementContentAsString();
+                                            if (!int.TryParse(pagesStr, out pages) || pages < 0)
+                                                throw new InvalidDataException($"Invalid page count '{pagesStr}' for book '{title}'.");
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(author))
+                            throw new InvalidDataException("Book title or author cannot be empty in XML.");
+
+                        loadedBooks.Add(new Book(title, author, pages));
+                    }
+                }
             }
+            catch (Exception ex) when (ex is not FileNotFoundException && ex is not InvalidOperationException)
+            {
+                throw new Exception($"An error occurred while loading the library: {ex.Message}", ex);
+            }
+        }
 
-            _books.Clear();
-            _books.AddRange(loadedBooks);
-        }
-        catch (Exception ex) when (ex is not FileNotFoundException && ex is not InvalidOperationException)
-        {
-            throw new Exception($"An error occurred while loading the library: {ex.Message}", ex);
-        }
+        _books.Clear();
+        _books.AddRange(loadedBooks);
     }
-    
+
     public void AddBook(Book book)
     {
         if (book == null)
@@ -69,7 +95,7 @@ public sealed class BookLibrary
 
         _books.Add(book);
     }
-    
+
     public void SaveToXml(string filePath)
     {
         XElement root = new("Books");
@@ -87,7 +113,7 @@ public sealed class BookLibrary
         XDocument doc = new(root);
         doc.Save(filePath);
     }
-    
+
     public List<Book> SearchByTitle(string searchCondition)
     {
         if (string.IsNullOrWhiteSpace(searchCondition))
@@ -97,7 +123,7 @@ public sealed class BookLibrary
             .Where(b => b.Title.Contains(searchCondition, StringComparison.OrdinalIgnoreCase))
             .ToList();
     }
-    
+
     public void SortByAuthorThenTitle()
     {
         _books = _books
