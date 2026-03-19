@@ -140,5 +140,84 @@ public class BookLibraryTests
         // Act & Assert
         Assert.Throws<ArgumentException>(() => library.AddBook(book));
     }
+    
+    [Fact]
+    public void SaveToXml_ValidBooks_CreatesXmlFile()
+    {
+        // Arrange
+        var library = new BookLibrary();
+        library.AddBook(new Book("The Hobbit", "J.R.R. Tolkien", 310));
+        library.AddBook(new Book("1984", "George Orwell", 328));
+
+        // Act
+        library.SaveToXml(_testXmlPath);
+
+        // Assert
+        Assert.True(File.Exists(_testXmlPath));
+        var doc = XDocument.Load(_testXmlPath);
+        var books = doc.Root?.Elements("Book").ToList();
+        Assert.Equal(2, books?.Count);
+    }
+    
+    [Fact]
+    public void SearchByTitle_PartialMatch_ReturnsMatchingBooks()
+    {
+        // Arrange
+        var library = new BookLibrary();
+        library.AddBook(new Book("The Lord of the Rings", "J.R.R. Tolkien", 1100));
+        library.AddBook(new Book("The Hobbit", "J.R.R. Tolkien", 310));
+        library.AddBook(new Book("Harry Potter", "J.K. Rowling", 450));
+
+        // Act
+        var results = library.SearchByTitle("The");
+
+        // Assert
+        Assert.Equal(2, results.Count);
+        Assert.Contains(results, b => b.Title == "The Lord of the Rings");
+        Assert.Contains(results, b => b.Title == "The Hobbit");
+    }
+
+    [Fact]
+    public void SearchByTitle_CaseInsensitive_ReturnsMatches()
+    {
+        // Arrange
+        var library = new BookLibrary();
+        library.AddBook(new Book("The Hobbit", "J.R.R. Tolkien", 310));
+
+        // Act
+        var results = library.SearchByTitle("hobbit");
+
+        // Assert
+        Assert.Single(results);
+        Assert.Equal("The Hobbit", results[0].Title);
+    }
+
+    [Fact]
+    public void SearchByTitle_NoMatches_ReturnsEmptyList()
+    {
+        // Arrange
+        var library = new BookLibrary();
+        library.AddBook(new Book("The Hobbit", "J.R.R. Tolkien", 310));
+
+        // Act
+        var results = library.SearchByTitle("NonExistent");
+
+        // Assert
+        Assert.Empty(results);
+    }
+
+    [Fact]
+    public void SearchByTitle_EmptySearch_ReturnsEmptyList()
+    {
+        // Arrange
+        var library = new BookLibrary();
+        library.AddBook(new Book("The Hobbit", "J.R.R. Tolkien", 310));
+
+        // Act
+        var results = library.SearchByTitle("");
+
+        // Assert
+        Assert.Empty(results);
+    }
 
 }

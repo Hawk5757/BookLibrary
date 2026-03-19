@@ -5,7 +5,7 @@ namespace BookLibrary;
 
 public sealed class BookLibrary
 {
-    private readonly List<Book> _books = new();
+    private List<Book> _books = new();
     public IReadOnlyList<Book> Books => _books.AsReadOnly();
 
     public void LoadFromXmlFile(string filePath)
@@ -68,5 +68,33 @@ public sealed class BookLibrary
             throw new ArgumentException("Book pages must be greater than 0.", nameof(book));
 
         _books.Add(book);
+    }
+    
+    public void SaveToXml(string filePath)
+    {
+        XElement root = new("Books");
+
+        foreach (Book book in _books)
+        {
+            XElement bookElement = new("Book",
+                new XElement("Title", book.Title),
+                new XElement("Author", book.Author),
+                new XElement("Pages", book.Pages)
+            );
+            root.Add(bookElement);
+        }
+
+        XDocument doc = new(root);
+        doc.Save(filePath);
+    }
+    
+    public List<Book> SearchByTitle(string searchCondition)
+    {
+        if (string.IsNullOrWhiteSpace(searchCondition))
+            return new List<Book>();
+
+        return _books
+            .Where(b => b.Title.Contains(searchCondition, StringComparison.OrdinalIgnoreCase))
+            .ToList();
     }
 }
