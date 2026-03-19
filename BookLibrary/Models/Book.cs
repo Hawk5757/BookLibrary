@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 namespace BookLibrary.Models;
 
 [XmlType("Book")]
-public class Book
+public sealed class Book
 {
     public Book() { }
     

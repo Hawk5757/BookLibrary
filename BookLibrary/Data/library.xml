@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Books>
+  <Book>
+    <Title>The Ugly Duckling</Title>
+    <Author>Hans Christian Andersen</Author>
+    <Pages>32</Pages>
+  </Book>
+  <Book>
+    <Title>The Little Mermaid</Title>
+    <Author>Hans Christian Andersen</Author>
+    <Pages>48</Pages>
+  </Book>
+  <Book>
+    <Title>The Shining</Title>
+    <Author>Stephen King</Author>
+    <Pages>447</Pages>
+  </Book>
+  <Book>
+    <Title>It</Title>
+    <Author>Stephen King</Author>
+    <Pages>1138</Pages>
+  </Book>
+  <Book>
+    <Title>The Hobbit</Title>
+    <Author>J.R.R. Tolkien</Author>
+    <Pages>310</Pages>
+  </Book>
+</Books>
