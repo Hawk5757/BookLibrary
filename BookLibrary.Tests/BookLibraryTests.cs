@@ -66,6 +66,22 @@ public class BookLibraryTests
     }
     
     [Fact]
+    public void LoadFromXml_ZeroPages_ThrowsInvalidDataException()
+    {
+        var root = new XElement("Books",
+            new XElement("Book",
+                new XElement("Title", "Test"),
+                new XElement("Author", "Author"),
+                new XElement("Pages", "0")
+            )
+        );
+        new XDocument(root).Save(_testXmlPath);
+
+        var library = new BookLibrary();
+        Assert.Throws<InvalidDataException>(() => library.LoadFromXmlFile(_testXmlPath));
+    }
+    
+    [Fact]
     public void AddBook_ValidBook_AddsToList()
     {
         // Arrange
@@ -125,6 +141,13 @@ public class BookLibraryTests
         var doc = XDocument.Load(_testXmlPath);
         var books = doc.Root?.Elements("Book").ToList();
         Assert.Equal(2, books?.Count);
+    }
+    
+    [Fact]
+    public void SaveToXml_EmptyPath_ThrowsArgumentException()
+    {
+        var library = new BookLibrary();
+        Assert.Throws<ArgumentException>(() => library.SaveToXml(""));
     }
     
     [Fact]

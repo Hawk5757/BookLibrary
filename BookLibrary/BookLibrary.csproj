@@ -8,8 +8,9 @@
 
     <ItemGroup>
       <Folder Include="Data\" />
-      <Folder Include="Interfaces\" />
       <Folder Include="Services\" />
+
+      <Using Include="BookLibrary.Models" />
     </ItemGroup>
 
 </Project>
