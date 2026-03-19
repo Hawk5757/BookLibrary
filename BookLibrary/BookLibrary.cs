@@ -57,7 +57,7 @@ public sealed class BookLibrary
                                             break;
                                         case "Pages":
                                             var pagesStr = bookSubtree.ReadElementContentAsString();
-                                            if (!int.TryParse(pagesStr, out pages) || pages < 0)
+                                            if (!int.TryParse(pagesStr, out pages) || pages <= 0)
                                                 throw new InvalidDataException($"Invalid page count '{pagesStr}' for book '{title}'.");
                                             break;
                                     }
@@ -72,7 +72,9 @@ public sealed class BookLibrary
                     }
                 }
             }
-            catch (Exception ex) when (ex is not FileNotFoundException && ex is not InvalidOperationException)
+            catch (Exception ex) when (ex is not FileNotFoundException &&
+                                       ex is not InvalidOperationException &&
+                                       ex is not InvalidDataException)
             {
                 throw new Exception($"An error occurred while loading the library: {ex.Message}", ex);
             }
@@ -105,7 +107,7 @@ public sealed class BookLibrary
         doc.Save(filePath);
     }
 
-    public List<Book> SearchByTitle(string searchCondition)
+    public IReadOnlyList<Book> SearchByTitle(string searchCondition)
     {
         if (string.IsNullOrWhiteSpace(searchCondition))
             return new List<Book>();

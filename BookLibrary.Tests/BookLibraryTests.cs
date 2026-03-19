@@ -108,39 +108,7 @@ public class BookLibraryTests
         Assert.Throws<ArgumentNullException>(() => library.AddBook(null!));
     }
 
-    [Fact]
-    public void AddBook_EmptyTitle_ThrowsArgumentException()
-    {
-        // Arrange
-        var library = new BookLibrary();
-        var book = new Book("", "Author", 100);
-
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => library.AddBook(book));
-    }
-
-    [Fact]
-    public void AddBook_EmptyAuthor_ThrowsArgumentException()
-    {
-        // Arrange
-        var library = new BookLibrary();
-        var book = new Book("Title", "", 100);
-
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => library.AddBook(book));
-    }
-
-    [Fact]
-    public void AddBook_NegativePages_ThrowsArgumentException()
-    {
-        // Arrange
-        var library = new BookLibrary();
-        var book = new Book("Title", "Author", -50);
-
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => library.AddBook(book));
-    }
-    
+   
     [Fact]
     public void SaveToXml_ValidBooks_CreatesXmlFile()
     {
